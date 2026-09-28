@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuiz</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2563eb;
+        }
+        
+        /* Nama Kelompok */
+        .group-name {
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: #64748b;
+        margin-top: -10px;
+        margin-bottom: 20px;
+        }
+
+        #question {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .answer {
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 10px;
+            background: #e2e8f0;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .answer:hover {
+            background: #bfdbfe;
+        }
+
+        #nextBtn,
+        #restartBtn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+    <h1>📚 EduQuiz</h1>
+    
+    <div class="group-name">
+    Pixel Pioneers
+    </div>
+
+    <p id="number"></p>
+
+    <div id="question"></div>
+
+    <div id="answers"></div>
+
+    <button id="nextBtn" onclick="nextQuestion()">
+        Soal Berikutnya
+    </button>
+
+    <div id="result"></div>
+
+    <button id="restartBtn" onclick="restartQuiz()" style="display:none;">
+        🔄 Main Lagi
+    </button>
+
+</div>
+
+<script>
+
+const questions = [
+    {
+        question: "Ibukota Indonesia adalah?",
+        answers: ["Bandung", "Jakarta", "Surabaya", "Medan"],
+        correct: 1
+    },
+    {
+        question: "Planet yang dikenal sebagai Planet Merah adalah?",
+        answers: ["Venus", "Jupiter", "Mars", "Saturnus"],
+        correct: 2
+    },
+    {
+        question: "Hasil dari 12 × 5 adalah?",
+        answers: ["50", "60", "70", "80"],
+        correct: 1
+    },
+    {
+        question: "Hewan yang disebut sebagai raja hutan adalah?",
+        answers: ["Harimau", "Gajah", "Singa", "Serigala"],
+        correct: 2
+    },
+    {
+        question: "Alat untuk mengukur suhu disebut?",
+        answers: ["Barometer", "Termometer", "Speedometer", "Mikroskop"],
+        correct: 1
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function showQuestion() {
+
+    const question = questions[currentQuestion];
+
+    document.getElementById("number").innerText =
+        "Soal " + (currentQuestion + 1) +
+        " dari " + questions.length;
+
+    document.getElementById("question").innerText =
+        question.question;
+
+    const answersDiv = document.getElementById("answers");
+
+    answersDiv.innerHTML = "";
+
+    question.answers.forEach((answer, index) => {
+
+        const button = document.createElement("button");
+
+        button.innerText =
+            String.fromCharCode(65 + index) + ". " + answer;
+
+        button.className = "answer";
+
+        button.onclick = function() {
+            checkAnswer(index);
+        };
+
+        answersDiv.appendChild(button);
+    });
+}
+
+function checkAnswer(index) {
+
+    if (index === questions[currentQuestion].correct) {
+        score += 20;
+        alert("✅ Jawaban benar!");
+    } else {
+        alert("❌ Jawaban salah!");
+    }
+
+    document.querySelectorAll(".answer").forEach(button => {
+        button.disabled = true;
+    });
+}
+
+function nextQuestion() {
+
+    if (currentQuestion < questions.length - 1) {
+
+        currentQuestion++;
+
+        showQuestion();
+
+    } else {
+
+        document.getElementById("question").style.display = "none";
+        document.getElementById("answers").style.display = "none";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("number").style.display = "none";
+
+        document.getElementById("result").innerHTML =
+            "🎉 Quiz Selesai!<br><br>" +
+            "Skor kamu: " + score;
+
+        document.getElementById("restartBtn").style.display = "block";
+    }
+}
+
+function restartQuiz() {
+
+    currentQuestion = 0;
+    score = 0;
+
+    document.getElementById("question").style.display = "block";
+    document.getElementById("answers").style.display = "block";
+    document.getElementById("nextBtn").style.display = "block";
+    document.getElementById("number").style.display = "block";
+
+    document.getElementById("result").innerHTML = "";
+
+    document.getElementById("restartBtn").style.display = "none";
+
+    showQuestion();
+}
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
